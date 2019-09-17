@@ -8,6 +8,20 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('./sw.js')
+      .then( (registration) => {
+        // The registration was successful
+        console.log('ServiceWorker registered, scope: ', registration.scope);
+      })
+      .catch( (error) => {
+        // The registration failed
+        console.log('ServiceWorker registration failed: ', error);
+      });
+
+  }
+
   initMap(); // added 
   fetchNeighborhoods();
   fetchCuisines();
@@ -78,7 +92,7 @@ initMap = () => {
         scrollWheelZoom: false
       });
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-    mapboxToken: '<your MAPBOX API KEY HERE>',
+    mapboxToken: 'pk.eyJ1IjoiY29nbm9zY2VudGkiLCJhIjoiY2swZHN0cHduMDBldDNwcGxlZzM5cXRoYSJ9.okWr3LZZxO-rwktGA6JyBg',
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
       '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
