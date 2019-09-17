@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
       .register('./sw.js')
       .then( (registration) => {
         // The registration was successful
-        console.log('ServiceWorker registered, scope: ', registration.scope);
+        console.log('ServiceWorker registered, the scope is: ', registration.scope);
       })
       .catch( (error) => {
         // The registration failed
-        console.log('ServiceWorker registration failed: ', error);
+        console.log('ServiceWorker registration failed with error: ', error);
       });
 
   }
