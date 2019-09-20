@@ -1,18 +1,19 @@
-const staticCacheName = 'review-cache-v1';
+const staticCacheName = 'review-cache';
+
 //Added all the files and images needed for caching
 const assets = [
   './',
   'index.html',
-  'restaurant.html?id=1',
-  'restaurant.html?id=2',
-  'restaurant.html?id=3',
-  'restaurant.html?id=4',
-  'restaurant.html?id=5',
-  'restaurant.html?id=6',
-  'restaurant.html?id=7',
-  'restaurant.html?id=8',
-  'restaurant.html?id=9',
-  'restaurant.html?id=10',
+  // 'restaurant.html?id=1',
+  // 'restaurant.html?id=2',
+  // 'restaurant.html?id=3',
+  // 'restaurant.html?id=4',
+  // 'restaurant.html?id=5',
+  // 'restaurant.html?id=6',
+  // 'restaurant.html?id=7',
+  // 'restaurant.html?id=8',
+  // 'restaurant.html?id=9',
+  // 'restaurant.html?id=10',
   './css/styles.css',
   './js/main.js',
   './js/dbhelper.js',
@@ -30,41 +31,43 @@ const assets = [
   './img/10.jpg'
 ];
 
-self.addEventListener('install', function(event) {
-    console.log("event", event)
-    event.waitUntil(
-      caches.open(staticCacheName)
-        .then( (cache) => {
-          return cache.addAll(assets);
+
+// install service worker
+self.addEventListener('install', function (event) {
+  console.log("event", event)
+  event.waitUntil(
+    caches.open(staticCacheName)
+    .then((cache) => {
+      return cache.addAll(assets);
+    })
+  );
+});
+
+
+//activate the event accordingly
+self.addEventListener('activate', function (event) {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.filter(function (cacheName) {
+          return cacheName.startsWith('review-') &&
+            cacheName != staticCacheName;
+        }).map(function (cacheName) {
+          return caches.delete(cacheName);
         })
-    );
-  });
-  
-  self.addEventListener('activate', function (event) {
-      event.waitUntil(
-          caches.keys()
-            .then( (cacheNames) => {
-              return Promise.all(
-                  cacheNames.filter(function (cacheName) {
-                      return cacheName.startsWith('review-') &&
-                          cacheName != staticCacheName;
-                  }).map(function (cacheName) {
-                      return caches.delete(cacheName);
-                  })
-              );
-            })
       );
-  });
-  
-  
-  
-  
-  self.addEventListener('fetch', (event) => {
-    event.respondWith(
-      caches.match(event.request)
-        .then((response) => {
-          return response || fetch(event.request);
-        })
-    );
-  });
-  
+    })
+  );
+});
+
+
+
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+    .then((response) => {
+      return response || fetch(event.request);
+    })
+  );
+});
